@@ -6,10 +6,36 @@ const app = express();
 const server = require("http").createServer(app);
 const io = require("socket.io")(server);
 const messagesFile = path.join(__dirname, "messages.json");
+const setupSwagger = require("./swagger");
+setupSwagger(app);
 
 app.use(express.static(path.join(__dirname, "/public")));
 app.use(bodyParser.json());
 
+/**
+ * @swagger
+ * /messages:
+ *   get:
+ *     summary: Отримати останні 10 повідомлень
+ *     responses:
+ *       200:
+ *         description: Список повідомлень
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   username:
+ *                     type: string
+ *                     example: "user1"
+ *                   text:
+ *                     type: string
+ *                     example: "Hello world"
+ *       500:
+ *         description: Помилка сервера при читанні повідомлень
+ */
 app.get("/messages", (req, res) => {
     fs.readFile(messagesFile, "utf8", (err, data) => {
         if (err) {
@@ -55,6 +81,25 @@ app.post("/message", (req, res) => {
     });
 });
 
+/**
+ * @swagger
+ * /clear-messages:
+ *   post:
+ *     summary: Очистити історію повідомлень
+ *     responses:
+ *       200:
+ *         description: Історія повідомлень очищена
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *       500:
+ *         description: Помилка сервера при очищенні повідомлень
+ */
 app.post("/clear-messages", (req, res) => {
     console.log("Clear messages endpoint called");
     fs.writeFile(messagesFile, JSON.stringify([], null, 2), (err) => {
