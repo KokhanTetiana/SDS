@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chatroom</title>
+    <link href="style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="app">
+    <div class="screen join-screen active">
+        <div class="form">
+            <h2>Приєднання до чату</h2>
+            <div class="form-input">
+                <label>Ваше ім'я</label>
+                <input type="text" id="username">
+            </div>
+            <div class="form-input">
+                <button id="join-user">Приєднатися</button>
+            </div>
+        </div>
+    </div>
+    <div class="screen chat-screen ">
+        <div class="header">
+            <div class="logo">ChatRoom</div>
+            <button id="exit-chat">Вихід</button>
+            <button onclick="window.location.href='history.html'">Історія</button>
+        </div>
+        <div class="messages" id="messages">
+            <div class="message my-message">
+                <div>
+                    <div class="name"></div>
+                    <div class="text"></div>
+                </div>
+            </div>
+            <div class="update">
+
+            </div>
+            <div class="message other-message">
+                <div>
+                    <div class="name"></div>
+                    <div class="text"></div>
+                </div>
+            </div>
+        </div>
+        <div class="typebox">
+            <input type="text" id="message-input">
+            <button id="send-message">Відправити</button>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="socket.io/socket.io.js"></script>
+<script type="text/javascript" src="code.js"></script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <title>Історія чату</title>
+  <link rel="stylesheet" href="style_history.css" />
+</head>
+<body>
+  <h2>Історія чату</h2>
+  <div id="history-container"></div>
+  <button class="clear-btn" id="clear-history">Очистити історію</button>
+  <a class="back-link" href="index.html">Назад до чату</a>
+
+  <script>
+  function loadMessages() {
+    const container = document.getElementById("history-container");
+    fetch('/messages')
+      .then(res => res.json())
+      .then(messages => {
+        container.innerHTML = "";
+        if (messages.length === 0) {
+          container.innerHTML = "<i>Поки що немає повідомлень.</i>";
+          return;
+        }
+        messages.forEach(msg => {
+          const div = document.createElement("div");
+          div.className = "message";
+          div.innerHTML = `<strong>${msg.username}</strong>: ${msg.text}`;
+          container.appendChild(div);
+        });
+      })
+      .catch(err => {
+        container.innerText = "Помилка при завантаженні історії.";
+        console.error(err);
+      });
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    loadMessages();
+
+    document.getElementById("clear-history").addEventListener("click", () => {
+      if (!confirm("Ви дійсно хочете очистити всю історію?")) return;
+
+      fetch('/clear-messages', { method: 'POST' })
+        .then(res => {
+          if (res.ok) {
+            loadMessages();
+          } else {
+            alert("Не вдалося очистити історію.");
+          }
+        })
+        .catch(() => alert("Помилка при спробі очистити історію."));
+    });
+  });
+</script>
+</body>
+</html>
